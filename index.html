@@ -19,6 +19,7 @@
           <li><a href="#contact">Contact</a></li>
         </ul>
       </nav>
+      <button id="theme-toggle" class="theme-toggle" type="button">Dark Mode</button>
     </div>
   </header>
 
@@ -32,6 +33,15 @@
           I help businesses, startups, and personal brands create beautiful
           websites that look professional and work smoothly on all devices.
         </p>
+        <div class="hero-offer">
+          <p>Limited time offer: <strong>20% off</strong> website packages.</p>
+          <div class="countdown" aria-live="polite">
+            <span><strong id="countdown-days">00</strong>Days</span>
+            <span><strong id="countdown-hours">00</strong>Hrs</span>
+            <span><strong id="countdown-minutes">00</strong>Mins</span>
+            <span><strong id="countdown-seconds">00</strong>Secs</span>
+          </div>
+        </div>
         <div class="hero-buttons">
           <a href="#projects" class="btn btn-primary">View My Work</a>
           <a href="#contact" class="btn btn-secondary">Hire Me</a>
@@ -163,5 +173,63 @@
       <p>© 2026 Nay Dev. All rights reserved.</p>
     </div>
   </footer>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const themeToggle = document.getElementById('theme-toggle');
+      const body = document.body;
+      const savedTheme = localStorage.getItem('site-theme');
+
+      function setTheme(theme) {
+        if (theme === 'dark') {
+          body.classList.add('dark-mode');
+          themeToggle.textContent = 'Light Mode';
+        } else {
+          body.classList.remove('dark-mode');
+          themeToggle.textContent = 'Dark Mode';
+        }
+        localStorage.setItem('site-theme', theme);
+      }
+
+      const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+      setTheme(savedTheme || (prefersDark ? 'dark' : 'light'));
+
+      themeToggle.addEventListener('click', function () {
+        const nextTheme = body.classList.contains('dark-mode') ? 'light' : 'dark';
+        setTheme(nextTheme);
+      });
+
+      const endDate = new Date('2026-04-15T23:59:59');
+      const daysEl = document.getElementById('countdown-days');
+      const hoursEl = document.getElementById('countdown-hours');
+      const minutesEl = document.getElementById('countdown-minutes');
+      const secondsEl = document.getElementById('countdown-seconds');
+      const countdownContainer = document.querySelector('.hero-offer');
+
+      function updateCountdown() {
+        const now = new Date();
+        const diff = endDate - now;
+
+        if (diff <= 0) {
+          countdownContainer.innerHTML = '<p>Offer expired. Check back soon for the next special deal!</p>';
+          clearInterval(intervalId);
+          return;
+        }
+
+        const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+        const minutes = Math.floor((diff / (1000 * 60)) % 60);
+        const seconds = Math.floor((diff / 1000) % 60);
+
+        daysEl.textContent = String(days).padStart(2, '0');
+        hoursEl.textContent = String(hours).padStart(2, '0');
+        minutesEl.textContent = String(minutes).padStart(2, '0');
+        secondsEl.textContent = String(seconds).padStart(2, '0');
+      }
+
+      updateCountdown();
+      const intervalId = setInterval(updateCountdown, 1000);
+    });
+  </script>
 </body>
 </html>
